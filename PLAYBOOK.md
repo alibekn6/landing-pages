@@ -1,7 +1,7 @@
 # The Landing Page Playbook
 
-How I go from a one-line brief to a landing page (or product demo) that people
-ask about. The process is a fixed sequence of passes, each powered by a Claude
+How to go from a one-line brief to a landing page (or product demo) worth
+showing off. The process is a fixed sequence of passes, each powered by a Claude
 Code skill. Skills without process produce pretty fragments; process without
 skills produces generic pages. You need both.
 
@@ -26,7 +26,7 @@ Do not design anything until you can answer three questions:
 - **What is the brand personality?** (clinical? warm? tactical? luxurious?)
 
 The `frontend-design` skill enforces this as a hard gate, and it is right to.
-Every generic AI-looking page I have seen skipped this step. If the client or
+Almost every generic AI-looking page skips this step. If the client or
 brief can't answer, decide yourself and write it down — but never infer it
 silently from the codebase.
 
@@ -53,7 +53,7 @@ Two situational extras: `image-to-code` when image generation is available
 **Typography** (skills: `better-typography`, `frontend-design`):
 
 - One modular scale, one ratio: 1.25, 1.333, or 1.5. Fluid sizes via `clamp()`.
-- Never Inter/Roboto/Open Sans/Arial. My swaps: Instrument Sans, Plus Jakarta
+- Never Inter/Roboto/Open Sans/Arial. Good swaps: Instrument Sans, Plus Jakarta
   Sans, Outfit, Geist, Satoshi; editorial serif accents from Newsreader or
   Instrument Serif when the direction calls for it.
 - Headings: line-height ~1.1, tracking around −0.02em. Body: 1.5–1.6, neutral
@@ -77,7 +77,7 @@ not on the scale will read as sloppy at squint distance.
 
 ## Step 3 — Structure the page
 
-I structure marketing pages as AIDA (skill: `gpt-taste`): nav → Attention
+Structure marketing pages as AIDA (skill: `gpt-taste`): nav → Attention
 (hero) → Interest (proof, bento) → Desire (deep-dive, motion) → Action (CTA).
 
 Hero discipline (the section everyone gets wrong):
@@ -134,8 +134,8 @@ Motion is a separate pass over a finished page (skills: `animate`, `gsap`,
 
 ## Step 6 — The hero demo video (the demo-day secret)
 
-The thing people actually ask about. Instead of screen-recording the product,
-I *code* the demo as an HTML/CSS/GSAP animation and render it to video
+The part people actually ask about. Instead of screen-recording the product,
+*code* the demo as an HTML/CSS/GSAP animation and render it to video
 (skill: `landing-hero-animation`):
 
 1. Write a scene-by-scene storyboard with exact timings (2–4s per scene:

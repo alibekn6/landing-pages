@@ -1,7 +1,8 @@
 # landing-pages
 
-People keep asking how I make my landing pages and demos. This repo is the
-answer: the exact workflow I use, plus the Claude Code skills that power it.
+A repeatable workflow for building landing pages and product demos with
+Claude Code — the full process from brief to shipped page, plus the Claude
+Code skills that power each step.
 
 **Start here → [PLAYBOOK.md](PLAYBOOK.md)** — the full process from brief to
 shipped page, including the hero-demo-video pipeline.
@@ -20,9 +21,9 @@ and Playwright (chromium).
 
 ## The skills
 
-> ⚠️ The `skills/` directory is being populated as the attribution pass
-> completes — see [ATTRIBUTION.md](ATTRIBUTION.md). Skills whose origin I
-> can't verify are linked to their source instead of vendored.
+Every skill listed below is vendored in `skills/` and installed by
+`./install.sh`. Provenance and licenses are tracked in
+[ATTRIBUTION.md](ATTRIBUTION.md).
 
 **Core — install all of these, whatever you're building:**
 

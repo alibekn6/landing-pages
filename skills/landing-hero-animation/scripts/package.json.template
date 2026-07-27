@@ -1,0 +1,14 @@
+{
+  "name": "hero-animation-export",
+  "version": "1.0.0",
+  "description": "Playwright + ffmpeg pipeline for landing hero animation",
+  "type": "module",
+  "scripts": {
+    "render": "node render.js",
+    "encode": "bash encode.sh",
+    "all": "npm run render && npm run encode"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}

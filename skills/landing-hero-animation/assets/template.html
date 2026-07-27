@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero Animation</title>
+
+<!-- Fonts: replace the Google Fonts URL with the brand's actual fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- GSAP core. Add plugins via additional <script> tags if needed (Flip, SplitText, etc.) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+  /*
+   * BRAND TOKENS — replace every value with the user's brand.
+   * Keep the variable names; they're referenced throughout the CSS below.
+   */
+  :root {
+    --bg:          #FFFFFF;
+    --surface:     #FAFAFC;
+    --tertiary:    #EDEDF1;
+    --text:        #1A1A1E;
+    --text-sec:    #6B6B75;
+    --text-ter:    #A4A4AD;
+    --border:      #E7E7EC;
+    --accent:      #5B9AFF;
+    --accent-soft: #EEF4FF;
+    --accent-2:    #A78BFA;
+
+    --f-serif: 'Instrument Serif', serif;
+    --f-sans:  'DM Sans', sans-serif;
+    --f-mono:  'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: var(--f-sans);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh;
+  }
+
+  /*
+   * STAGE — fixed 1920×1080 pixel dimensions.
+   * Playwright renders at exactly this size (with deviceScaleFactor for 4K).
+   * The media query below scales the whole stage for live preview at smaller viewports.
+   */
+  .stage {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    background: var(--bg);
+    overflow: hidden;
+    transform-origin: center;
+  }
+  @media (max-width: 1920px) {
+    .stage { transform: scale(calc(100vw / 1920)); }
+  }
+
+  /*
+   * MAIN CARD — the primary canvas for scenes 2+.
+   * Views overlap inside .card-body via position: absolute.
+   */
+  .card-main {
+    position: absolute;
+    top: 180px;
+    left: 220px;
+    width: 1480px;
+    height: 720px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 44px 64px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    opacity: 0;
+    box-shadow:
+      0 32px 64px rgba(26, 26, 30, 0.08),
+      0 6px 16px rgba(26, 26, 30, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    will-change: transform, opacity;
+    overflow: hidden;
+  }
+
+  .main-header {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    min-height: 64px;
+    flex: none;
+  }
+  .main-label {
+    font-family: var(--f-serif);
+    font-size: 56px;
+    line-height: 1;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .main-sublabel {
+    font-family: var(--f-mono);
+    font-size: 13px;
+    color: var(--text-ter);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+  }
+
+  /* Card body — parent for all absolute-positioned views */
+  .card-body {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Views — overlap via absolute positioning; only opacity controls visibility */
+  .view {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .view-intro  { justify-content: center; align-items: center; gap: 24px; }
+  .view-main   { padding-top: 12px; gap: 18px; }
+
+  /* Cursor (optional — for click choreography) */
+  .cursor {
+    position: absolute;
+    width: 24px; height: 24px;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    left: 0;
+    top: 0;
+  }
+  .cursor svg { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+  <div class="stage" id="stage">
+
+    <!-- REPLACE THIS WITH YOUR OWN HTML STRUCTURE. -->
+    <!-- This is a minimal 2-scene starter to get you going. -->
+
+    <div class="card-main" id="card-main">
+      <div class="main-header">
+        <span class="main-label" id="main-label">Intro</span>
+        <span class="main-sublabel" id="main-sublabel">SUBTITLE</span>
+      </div>
+
+      <div class="card-body">
+        <div class="view view-intro" id="view-intro">
+          <!-- Scene 1 content here -->
+          <div id="intro-content" style="font-family: var(--f-serif); font-size: 120px; color: var(--text);">
+            Your product
+          </div>
+        </div>
+        <div class="view view-main" id="view-main">
+          <!-- Scene 2 content here -->
+          <p style="font-family: var(--f-sans); font-size: 32px; line-height: 1.4;">
+            Second scene content lives here.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cursor for click interactions (optional) -->
+    <div class="cursor" id="cursor">
+      <svg viewBox="0 0 24 24" fill="#1A1A1E" stroke="white" stroke-width="1.2" stroke-linejoin="round">
+        <path d="M4 3 L4 18 L9 14 L11.5 20 L14 19 L11.5 13 L18 13 Z"/>
+      </svg>
+    </div>
+  </div>
+
+<script>
+(function () {
+  'use strict';
+
+  /*
+   * measureTargets() — run once after fonts load to capture final positions
+   * of interactive elements (buttons, lines, pills) for cursor animations.
+   *
+   * Coordinates are stage-relative (left 0 = left edge of stage, etc).
+   * Uses getBoundingClientRect minus the stage's top-left.
+   */
+  function measureTargets() {
+    const stage = document.getElementById('stage');
+    const stageRect = stage.getBoundingClientRect();
+    function center(el) {
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return {
+        x: r.left - stageRect.left + r.width / 2,
+        y: r.top - stageRect.top + r.height / 2,
+        w: r.width,
+        h: r.height
+      };
+    }
+    window.__targets = {
+      // Example:
+      // ctaButton: center(document.getElementById('cta-button')),
+    };
+  }
+
+  function buildTimeline() {
+    /*
+     * CRITICAL: detect render mode via URL query param.
+     * In render mode, the timeline starts PAUSED — Playwright will seek it frame-by-frame.
+     * In live mode, it plays and loops.
+     *
+     * If you pause() after constructing a playing timeline, headless Chrome stops
+     * ticking paint and page.screenshot() hangs forever. Always construct paused.
+     */
+    const params = new URLSearchParams(location.search);
+    const renderMode = params.has('render');
+    const tl = gsap.timeline({
+      repeat: renderMode ? 0 : -1,
+      repeatDelay: renderMode ? 0 : 0.8,
+      paused: renderMode,
+      defaults: { ease: 'power3.out' }
+    });
+    window.__timeline = tl;
+    window.__renderMode = renderMode;
+
+    // ─── Initial states — set every animatable property to its starting value ───
+    gsap.set('#card-main',   { opacity: 0, y: 24, scale: 0.985 });
+    gsap.set('#main-label',  { opacity: 1 });
+    gsap.set('#main-sublabel', { opacity: 0 });
+    gsap.set('.view',        { opacity: 0 });
+
+    // ═══ Scene 1 · Intro (0.0 – 3.0s) ═══
+    tl.to('#card-main',   { opacity: 1, y: 0, scale: 1, duration: 0.7 }, 0.1);
+    tl.to('#main-sublabel', { opacity: 1, duration: 0.4 }, 0.5);
+    tl.to('#view-intro',  { opacity: 1, duration: 0.5 }, 0.5);
+
+    // Hold
+    tl.to({}, { duration: 1.5 }, 1.2);
+
+    // ═══ Scene 2 · Main (3.0 – 6.0s) ═══
+    tl.to('#view-intro', { opacity: 0, duration: 0.4 }, 3.0);
+    tl.to('#main-label', { opacity: 0, y: -6, duration: 0.22, ease: 'power2.in' }, 3.0);
+    tl.call(() => {
+      document.getElementById('main-label').textContent = 'Second scene';
+    }, null, 3.22);
+    tl.fromTo('#main-label', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4 }, 3.22);
+    tl.to('#view-main',  { opacity: 1, duration: 0.5 }, 3.3);
+
+    tl.to({}, { duration: 2.0 }, 4.0);
+
+    // End of timeline — set final state to match initial state for seamless loop
+    tl.to('#card-main', { opacity: 0, duration: 0.3 }, 5.7);
+    tl.call(() => {
+      // Reset any text/state that was mutated during the timeline
+      document.getElementById('main-label').textContent = 'Intro';
+    }, null, 6.0);
+
+    return tl;
+  }
+
+  function start() {
+    // Force layout so measureTargets sees final positions
+    document.body.offsetHeight;
+    requestAnimationFrame(() => {
+      measureTargets();
+      buildTimeline();
+      // __ready tells Playwright the page is fully set up.
+      // Must be set AFTER fonts load and timeline builds.
+      window.__ready = true;
+    });
+  }
+
+  // Await fonts before starting — otherwise text reflows mid-render
+  if (document.readyState === 'complete') {
+    document.fonts.ready.then(start);
+  } else {
+    window.addEventListener('load', () => document.fonts.ready.then(start));
+  }
+})();
+</script>
+</body>
+</html>
